@@ -1,0 +1,25 @@
+# Update EventLanes diagrams on both push and PR events
+name: EventLanes Diagrams
+
+on:
+  push:
+    branches: [main]
+    paths: ['**/*.md']
+  pull_request:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  diagrams:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'push'
+      - uses: eventlanes/action-diagrams@v1
+        with:
+          api-token: ${{ secrets.EVENTLANES_API_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

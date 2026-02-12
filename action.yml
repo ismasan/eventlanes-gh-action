@@ -1,0 +1,24 @@
+name: 'EventLanes Diagrams'
+description: 'Generate diagram images from EventLanes DSL specs in markdown'
+inputs:
+  api-url:
+    description: 'EventLanes API base URL'
+    default: 'https://eventlanes.app'
+  api-token:
+    description: 'Bearer token for the EventLanes API'
+    required: true
+  mode:
+    description: 'auto (detect from trigger), files, or pr'
+    default: 'auto'
+  file-patterns:
+    description: 'Glob patterns for markdown files (files mode). Comma-separated.'
+    default: '**/*.md'
+  commit-message:
+    description: 'Commit message when updating files'
+    default: 'Update EventLanes diagram images'
+outputs:
+  updated-count:
+    description: 'Number of diagrams updated'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

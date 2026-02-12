@@ -1,0 +1,25 @@
+# Update EventLanes diagram images in PR descriptions, issues, and comments
+name: EventLanes Diagrams (GitHub)
+
+on:
+  pull_request:
+    types: [opened, edited]
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  diagrams:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: eventlanes/action-diagrams@v1
+        with:
+          api-token: ${{ secrets.EVENTLANES_API_TOKEN }}
+          mode: pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
