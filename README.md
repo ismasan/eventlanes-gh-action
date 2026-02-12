@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: eventlanes/action-diagrams@v1
+      - uses: eventlanes-gh-action@v1
         with:
           api-token: ${{ secrets.EVENTLANES_API_TOKEN }}
 ```
@@ -80,7 +80,7 @@ jobs:
   diagrams:
     runs-on: ubuntu-latest
     steps:
-      - uses: eventlanes/action-diagrams@v1
+      - uses: eventlanes-gh-action@v1
         with:
           api-token: ${{ secrets.EVENTLANES_API_TOKEN }}
           mode: pr

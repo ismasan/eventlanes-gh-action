@@ -1,5 +1,5 @@
 {
-  "name": "eventlanes-action-diagrams",
+  "name": "eventlanes-gh-action",
   "version": "1.0.0",
   "private": true,
   "description": "Generate diagram images from EventLanes DSL specs in markdown",
