@@ -86,6 +86,9 @@ PaymentConfirmed -(remove)-> Pending Bookings
 # ex. cmd:CreateUser -> evt:UserCreated
 ```
 
+<img width="1499" height="769" alt="CleanShot 2026-02-13 at 10 23 06" src="https://github.com/user-attachments/assets/457b1acd-451f-41c1-8a4b-9d69f6b566c7" />
+
+
 ## Modes
 
 | Mode | Trigger | What it does |
