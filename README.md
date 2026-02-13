@@ -30,6 +30,62 @@ evt:UserCreated -> rm:Users List
 
 Updates are idempotent — if the spec hasn't changed, the image URL stays the same and no update is made.
 
+## Example
+
+Type a code-fenced text model in a .md file in your repo, or a PR description, issue, or comment, and this action will generate and embed the image:
+
+```eventlanes
+## Node types
+# UIs are placeholder for any user-facing interfaces
+ui:Booking Page
+
+# Commands are intents to update state
+cmd:StartBooking
+cmd:ConfirmPayment
+
+# Events are the record of the state change
+evt:BookingStarted
+evt:PaymentConfirmed
+
+# Read models are system state
+# derived from events
+rm:Pending Bookings
+
+# Automations (A.K.A "Process Managers")
+# Observe changes in read models or events
+# And dispatch the next command in a workflow
+aut:Payment Processor
+
+# "Externals" are placeholders for 3rd parties
+# or services outside of your system
+ext:Stripe API
+
+# Once node types are declared,
+# you can define flows by refering to the node names
+
+# 1. Start a booking and record an event
+Booking Page -> StartBooking
+StartBooking -(validate data)-> BookingStarted
+
+# 2. Collect state in a read model
+BookingStarted -> Pending Bookings
+
+# 3. Pending bookings trigger an automation
+Pending Bookings -> Payment Processor
+
+# 4. Automation contacts some 3rd party
+Payment Processor -(POST request)->Stripe API
+
+# 5. Automation continues the workflow
+Payment Processor -> ConfirmPayment -> PaymentConfirmed
+
+# 6. Confirmed payments remove pending booking
+PaymentConfirmed -(remove)-> Pending Bookings
+
+# (*) You can also declare types as part of flows
+# ex. cmd:CreateUser -> evt:UserCreated
+```
+
 ## Modes
 
 | Mode | Trigger | What it does |
