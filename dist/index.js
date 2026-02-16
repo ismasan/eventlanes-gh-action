@@ -32517,9 +32517,11 @@ function parseEventLanesBlocks(markdown) {
     let i = 0;
     while (i < lines.length) {
         const line = lines[i];
-        // Look for opening fence: ```eventlanes (with optional leading whitespace)
-        if (/^\s*```eventlanes\s*$/.test(line)) {
+        // Look for opening fence: ```eventlanes or ```eventlanes! (with optional leading whitespace)
+        const fenceMatch = line.match(/^\s*```eventlanes(!?)\s*$/);
+        if (fenceMatch) {
             const fenceStart = i;
+            const replace = fenceMatch[1] === '!';
             const specLines = [];
             i++;
             // Collect spec lines until closing fence
@@ -32569,6 +32571,7 @@ function parseEventLanesBlocks(markdown) {
                     existingUrl,
                     markerStart,
                     markerEnd,
+                    replace,
                 });
             }
         }
@@ -32598,7 +32601,12 @@ function applyUpdates(markdown, updates) {
             `![Event Lanes Diagram](${imageUrl})`,
             '<!-- /eventlanes-diagram -->',
         ];
-        if (block.markerStart !== null && block.markerEnd !== null) {
+        if (block.replace) {
+            // Bang syntax: replace fence (and marker if present) with just the marker
+            const end = block.markerEnd !== null ? block.markerEnd : block.fenceEnd;
+            lines.splice(block.fenceStart, end - block.fenceStart + 1, ...markerLines);
+        }
+        else if (block.markerStart !== null && block.markerEnd !== null) {
             // Replace existing marker
             lines.splice(block.markerStart, block.markerEnd - block.markerStart + 1, ...markerLines);
         }

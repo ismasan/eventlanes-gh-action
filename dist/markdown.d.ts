@@ -11,6 +11,8 @@ export interface EventLanesBlock {
     markerStart: number | null;
     /** Line index where the existing marker ends (or null) */
     markerEnd: number | null;
+    /** If true (bang syntax), the code fence is replaced by the diagram */
+    replace: boolean;
 }
 export interface DiagramUpdate {
     block: EventLanesBlock;

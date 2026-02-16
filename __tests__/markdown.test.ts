@@ -131,6 +131,33 @@ describe('parseEventLanesBlocks', () => {
     expect(blocks).toHaveLength(1)
     expect(blocks[0].spec).toBe('cmd:A -> evt:B')
   })
+
+  it('detects eventlanes! blocks with replace: true', () => {
+    const md = [
+      '# My Doc',
+      '',
+      '```eventlanes!',
+      'cmd:CreateUser -> evt:UserCreated',
+      '```',
+    ].join('\n')
+
+    const blocks = parseEventLanesBlocks(md)
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0].spec).toBe('cmd:CreateUser -> evt:UserCreated')
+    expect(blocks[0].replace).toBe(true)
+  })
+
+  it('regular eventlanes blocks have replace: false', () => {
+    const md = [
+      '```eventlanes',
+      'cmd:A -> evt:B',
+      '```',
+    ].join('\n')
+
+    const blocks = parseEventLanesBlocks(md)
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0].replace).toBe(false)
+  })
 })
 
 describe('applyUpdates', () => {
@@ -247,6 +274,95 @@ describe('applyUpdates', () => {
     const md = '# Just a doc\nNo code blocks here.'
     const result = applyUpdates(md, [])
     expect(result).toBe(md)
+  })
+
+  it('bang block replaces the code fence with image marker', () => {
+    const md = [
+      '# Doc',
+      '```eventlanes!',
+      'cmd:A -> evt:B',
+      '```',
+      'After text.',
+    ].join('\n')
+
+    const blocks = parseEventLanesBlocks(md)
+    const result = applyUpdates(md, [
+      { block: blocks[0], imageUrl: 'https://example.com/new.png' },
+    ])
+
+    expect(result).toBe(
+      [
+        '# Doc',
+        '<!-- eventlanes-diagram -->',
+        '![Event Lanes Diagram](https://example.com/new.png)',
+        '<!-- /eventlanes-diagram -->',
+        'After text.',
+      ].join('\n'),
+    )
+  })
+
+  it('bang block with existing marker replaces fence + marker', () => {
+    const md = [
+      '# Doc',
+      '```eventlanes!',
+      'cmd:A -> evt:B',
+      '```',
+      '<!-- eventlanes-diagram -->',
+      '![Event Lanes Diagram](https://example.com/old.png)',
+      '<!-- /eventlanes-diagram -->',
+      'After text.',
+    ].join('\n')
+
+    const blocks = parseEventLanesBlocks(md)
+    const result = applyUpdates(md, [
+      { block: blocks[0], imageUrl: 'https://example.com/new.png' },
+    ])
+
+    expect(result).toBe(
+      [
+        '# Doc',
+        '<!-- eventlanes-diagram -->',
+        '![Event Lanes Diagram](https://example.com/new.png)',
+        '<!-- /eventlanes-diagram -->',
+        'After text.',
+      ].join('\n'),
+    )
+  })
+
+  it('handles mixed bang and non-bang blocks', () => {
+    const md = [
+      '```eventlanes!',
+      'cmd:A -> evt:B',
+      '```',
+      '',
+      '```eventlanes',
+      'cmd:C -> evt:D',
+      '```',
+    ].join('\n')
+
+    const blocks = parseEventLanesBlocks(md)
+    expect(blocks[0].replace).toBe(true)
+    expect(blocks[1].replace).toBe(false)
+
+    const result = applyUpdates(md, [
+      { block: blocks[0], imageUrl: 'https://example.com/1.png' },
+      { block: blocks[1], imageUrl: 'https://example.com/2.png' },
+    ])
+
+    expect(result).toBe(
+      [
+        '<!-- eventlanes-diagram -->',
+        '![Event Lanes Diagram](https://example.com/1.png)',
+        '<!-- /eventlanes-diagram -->',
+        '',
+        '```eventlanes',
+        'cmd:C -> evt:D',
+        '```',
+        '<!-- eventlanes-diagram -->',
+        '![Event Lanes Diagram](https://example.com/2.png)',
+        '<!-- /eventlanes-diagram -->',
+      ].join('\n'),
+    )
   })
 })
 

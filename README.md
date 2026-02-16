@@ -30,6 +30,27 @@ evt:UserCreated -> rm:Users List
 
 Updates are idempotent — if the spec hasn't changed, the image URL stays the same and no update is made.
 
+### Replace mode (`eventlanes!`)
+
+Use a trailing `!` on the code fence to **replace** the code block entirely with the diagram image:
+
+````markdown
+```eventlanes!
+cmd:CreateUser -> evt:UserCreated
+evt:UserCreated -> rm:Users List
+```
+````
+
+After the action runs, the code block is removed and only the rendered diagram remains:
+
+```markdown
+<!-- eventlanes-diagram -->
+![Event Lanes Diagram](https://scr.eventlanes.app/scr/...)
+<!-- /eventlanes-diagram -->
+```
+
+This is useful when you want to show only the diagram without the DSL source. Note that this is a one-shot operation — once the code block is replaced, subsequent runs leave the diagram marker as-is.
+
 ## Example
 
 Type a code-fenced text model in a .md file in your repo, or a PR description, issue, or comment, and this action will generate and embed the image:
