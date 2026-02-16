@@ -177,7 +177,7 @@ The `pr` mode handles all three trigger types automatically:
 
 The action uses two different tokens:
 
-- **`api-token`** — your EventLanes API token, used to generate diagram images. Store it as a repository secret (e.g. `EVENTLANES_API_TOKEN`).
+- **`api-token`** — your EventLanes API token, used to generate diagram images. To configure it, go to your repo's **Settings → Secrets and variables → Actions**, click **New repository secret**, set the name to `EVENTLANES_API_TOKEN`, and paste your token as the value.
 - **`GITHUB_TOKEN`** — required in `pr` mode only. This is the token the action uses to call the GitHub API to update PR bodies, issue bodies, and comments. GitHub automatically provides `${{ secrets.GITHUB_TOKEN }}` in every workflow run — you just need to pass it as an environment variable and grant the appropriate permissions (`pull-requests: write`, `issues: write`). It is not needed in `files` mode, which commits and pushes changes via git instead.
 
 ## Inputs
