@@ -115,7 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: eventlanes-gh-action@v1
+      - uses: ismasan/eventlanes-gh-action@v1
         with:
           api-token: ${{ secrets.EVENTLANES_API_TOKEN }}
 ```
@@ -139,7 +139,7 @@ jobs:
   diagrams:
     runs-on: ubuntu-latest
     steps:
-      - uses: eventlanes-gh-action@v1
+      - uses: ismasan/eventlanes-gh-action@v1
         with:
           api-token: ${{ secrets.EVENTLANES_API_TOKEN }}
           mode: pr
